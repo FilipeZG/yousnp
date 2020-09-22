@@ -1,4 +1,4 @@
-class LivroDao {
+class UserDao {
 
     constructor(db) {
         this._db = db;
@@ -10,13 +10,15 @@ class LivroDao {
                 INSERT INTO users (
                     name, 
                     tag,
-                    password
-                ) values (?, ?, ?)
+                    password,
+                    status
+                ) values (?, ?, ?, ?)
                 `,
                 [
                     user.name,
                     user.tag,
-                    user.password
+                    user.password,
+                    user.status
                 ],
                 function (err) {                
                     if (err) {
@@ -69,13 +71,15 @@ class LivroDao {
                 UPDATE users SET
                 name = ?,
                 tag = ?,
-                password = ?
+                password = ?,
+                status = ?,
                 WHERE id = ?
             `,
             [
                 user.name,
                 user.tag,
                 user.password,
+                user.status,
                 user.id
             ],
             erro => {
@@ -107,6 +111,21 @@ class LivroDao {
             );
         });
     }
+
+    autenticar(user) {
+        return new Promise((resolve, reject) => {
+            let sql = user.tag ? ` SELECT name FROM users WHERE tag = ? and status = 'A'` : ` SELECT name FROM users WHERE id = ? and password = ? and status = 'A'`;
+
+            this._db.get(sql, user.tag ? [user.tag] : [user.id, user.password], (erro, name) => {
+                    if (erro) {
+                        return reject('Não foi possível encontrar o usuário!');
+                    }
+
+                    return resolve(name);
+                }
+            );
+        });
+    }
 }
 
-module.exports = LivroDao;
+module.exports = UserDao;
