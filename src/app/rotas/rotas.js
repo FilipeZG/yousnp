@@ -32,7 +32,7 @@ module.exports = (app) => {
         const userDao = new UserDao(db);
         
         userDao.atualiza(req.body)
-                .then(resp.redirect('/users'))
+                .then(resp.redirect(303, '/users'))
                 .catch(error => resp.status(400).send({ error }));
     });
 
