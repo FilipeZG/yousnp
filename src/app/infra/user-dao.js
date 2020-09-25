@@ -72,7 +72,7 @@ class UserDao {
                 name = ?,
                 tag = ?,
                 password = ?,
-                status = ?,
+                status = ?
                 WHERE id = ?
             `,
             [
