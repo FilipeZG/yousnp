@@ -114,7 +114,7 @@ class UserDao {
 
     autenticar(user) {
         return new Promise((resolve, reject) => {
-            let sql = user.tag ? ` SELECT name FROM users WHERE tag = ? and status = 'A'` : ` SELECT name FROM users WHERE id = ? and password = ? and status = 'A'`;
+            let sql = ` SELECT id, name FROM users WHERE ${ user.tag ? 'tag = ?' : 'id = ? and password = ?' }  and status = 'A'`;
 
             this._db.get(sql, user.tag ? [user.tag] : [user.id, user.password], (erro, name) => {
                     if (erro) {
