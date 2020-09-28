@@ -1,5 +1,7 @@
 const UserDao = require('../infra/user-dao');
 const AccessDao = require('../infra/access-dao');
+const ReportDao = require('../infra/report-dao');
+
 const db = require('../../config/database');
 
 module.exports = (app) => {
@@ -74,6 +76,22 @@ module.exports = (app) => {
         const accessDao = new AccessDao(db);
 
         accessDao.buscaPorId(id)
+                 .then(access_list => resp.send(access_list))
+                 .catch(error => resp.status(400).send({ error }));
+    });
+
+    app.get('/report/user-access-quantity', function(req, resp) {
+        const reportDao = new ReportDao(db);
+
+        reportDao.listUserAccessQuantitySql()
+                 .then(access_list => resp.send(access_list))
+                 .catch(error => resp.status(400).send({ error }));
+    });
+
+    app.get('/report/type-access-quantity', function(req, resp) {
+        const reportDao = new ReportDao(db);
+
+        reportDao.listTypeAccessQuantitySql()
                  .then(access_list => resp.send(access_list))
                  .catch(error => resp.status(400).send({ error }));
     });
